@@ -1,4 +1,4 @@
-package volunteer.plus.todowebapp;
+package com.example.todowebapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

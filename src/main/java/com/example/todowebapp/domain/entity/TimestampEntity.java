@@ -1,4 +1,4 @@
-package volunteer.plus.todowebapp.domain.entity;
+package com.example.todowebapp.domain.entity;
 
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
@@ -29,10 +29,6 @@ public abstract class TimestampEntity {
 
     @PreUpdate
     protected void onUpdate() {
-        this.updateDate = LocalDateTime.now();
-    }
-
-    public void setUpdateDate() {
         this.updateDate = LocalDateTime.now();
     }
 }

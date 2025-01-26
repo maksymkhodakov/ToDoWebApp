@@ -12,8 +12,10 @@ CREATE TABLE IF NOT EXISTS "user" (
 
 CREATE TABLE IF NOT EXISTS "todo" (
     "id"              BIGSERIAL PRIMARY KEY,
-    "task"            VARCHAR(255) NOT NULL,
-    "priority"        VARCHAR(100) NOT NULL,
+    "description"     VARCHAR(255) NOT NULL,
+    "due_date"        TIMESTAMP NOT NULL,
+    "check_mark"      BOOLEAN NOT NULL,
+    "completion_date" TIMESTAMP,
     "create_date"     TIMESTAMP DEFAULT NULL,
     "update_date"     TIMESTAMP DEFAULT NULL,
     "user_id"         BIGINT,

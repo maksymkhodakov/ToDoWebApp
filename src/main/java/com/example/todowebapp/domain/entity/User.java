@@ -1,4 +1,4 @@
-package volunteer.plus.todowebapp.domain.entity;
+package com.example.todowebapp.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
