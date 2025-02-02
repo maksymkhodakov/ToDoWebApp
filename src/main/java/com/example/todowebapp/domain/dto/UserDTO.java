@@ -1,29 +1,21 @@
 package com.example.todowebapp.domain.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import java.util.List;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Set;
-
-@Data
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1370232080745550612L;
-
+public class UserDTO {
     private Long id;
-    private Set<String> roles;
-    private Set<String> features;
-    private String firstName;
-    private String lastName;
     private String email;
-    private String username;
-
+    private String name;
+    private String lastName;
+    private boolean enabled;
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
+    private List<FeatureDTO> authorities;
 }
