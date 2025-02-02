@@ -12,14 +12,16 @@ import java.io.Serializable;
 public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-        if (permission instanceof Privilege privilege) {
-            return hasPrivilege(privilege, (User) authentication.getPrincipal());
+        if (permission instanceof Privilege privilege &&
+                authentication != null &&
+                authentication.getPrincipal() instanceof User userPrincipal) {
+            return hasPrivilege(privilege, userPrincipal);
         }
         return false;
     }
 
-    private boolean hasPrivilege(Privilege permission, User authentication) {
-        return authentication.getAuthorities()
+    private boolean hasPrivilege(Privilege permission, User principal) {
+        return principal.getAuthorities()
                 .stream()
                 .anyMatch(p -> p.getAuthority().equals(permission.name()));
     }
