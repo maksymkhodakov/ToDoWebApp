@@ -60,7 +60,7 @@ public class SecurityFilterConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(customizer -> customizer
-                        .requestMatchers("/api/me", "/api/register", "/api/login").permitAll()
+                        .requestMatchers("/api/me", "/api/register", "/api/login", "/swagger-ui/**", "/api-docs*/**").permitAll()
                         .anyRequest()
                         .authenticated()
                 )
