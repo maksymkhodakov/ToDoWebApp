@@ -31,7 +31,7 @@ public class User extends TimestampEntity implements UserDetails {
 
     private String lastName;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Todo> todos = new ArrayList<>();
 
     private boolean enabled;
@@ -46,5 +46,13 @@ public class User extends TimestampEntity implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public void addTodo(Todo todo) {
+        if (this.todos == null) {
+            this.todos = new ArrayList<>();
+        }
+        this.todos.add(todo);
+        todo.setUser(this);
     }
 }
