@@ -12,8 +12,13 @@ import java.time.LocalDate;
 @Builder
 @EqualsAndHashCode(callSuper = false, exclude = "user")
 @Entity
-@Table(name = "todo")
-public class Todo extends BaseEntity {
+@Table(name = "todos", schema = "public")
+public class Todo extends TimestampEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    protected Long id;
 
     @Column(name = "description")
     private String description;
