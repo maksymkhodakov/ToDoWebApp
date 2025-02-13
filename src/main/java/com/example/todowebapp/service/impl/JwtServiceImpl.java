@@ -3,7 +3,6 @@ package com.example.todowebapp.service.impl;
 import com.example.todowebapp.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +22,9 @@ public class JwtServiceImpl implements JwtService {
 
     @Value("${jwt.secret}")
     private String secretKey;
+
+    @Value("${jwt.expiration-time}")
+    private int expirationTime;
 
     @Override
     public String getEmailFromToken(String token) {
@@ -36,15 +38,14 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public Claims getAllInfoFromToken(String token) {
-        final Key key = getKey();
+        final SecretKey key = getKey();
         return Jwts.parser()
-                .setSigningKey(key)
+                .verifyWith(key)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token).getPayload();
     }
 
-    private Key getKey() {
+    private SecretKey getKey() {
         final byte[] array = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(array);
     }
@@ -62,8 +63,8 @@ public class JwtServiceImpl implements JwtService {
                 .claims(map)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
-                .signWith(getKey(), SignatureAlgorithm.HS512)
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(getKey())
                 .compact();
     }
 
