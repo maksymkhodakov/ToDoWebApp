@@ -1,10 +1,9 @@
 package com.example.todowebapp.domain.entity;
 
-import com.example.todowebapp.domain.converters.FeatureConverter;
-import com.example.todowebapp.domain.dto.FeatureDTO;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +13,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(callSuper = false, exclude = "todos")
+@EqualsAndHashCode(callSuper = false, exclude = {"todos", "role"})
 @Entity
 @Table(name = "users", schema = "public")
-public class User extends TimestampEntity implements UserDetails {
+public class User extends TimestampEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    protected Long id;
+    private Long id;
 
     private String email;
 
@@ -32,21 +31,15 @@ public class User extends TimestampEntity implements UserDetails {
     private String lastName;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Todo> todos = new ArrayList<>();
 
-    private boolean enabled;
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
-    @Column(name = "authorities", columnDefinition = "TEXT")
-    @Convert(converter = FeatureConverter.class)
-    private List<FeatureDTO> authorities;
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
+    @Column(name = "is_system")
+    private boolean system;
 
     public void addTodo(Todo todo) {
         if (this.todos == null) {

@@ -1,7 +1,10 @@
 package com.example.todowebapp.domain.dto;
 
+import com.example.todowebapp.domain.enumerated.UserRole;
 import lombok.*;
-import java.util.List;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 @Builder
 @Getter
@@ -11,11 +14,6 @@ import java.util.List;
 public class UserDTO {
     private Long id;
     private String email;
-    private String name;
-    private String lastName;
-    private boolean enabled;
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private List<FeatureDTO> authorities;
+    private UserRole userRole;
+    private Collection<GrantedAuthority> privileges;
 }

@@ -1,13 +1,9 @@
-package com.example.todowebapp.config;
+package com.example.todowebapp.security;
 
-import com.example.todowebapp.security.CustomPermissionEvaluator;
-import com.example.todowebapp.security.CustomSecurityFilter;
-import com.example.todowebapp.security.EntryPoint;
+import com.example.todowebapp.config.CorsProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
-import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,7 +24,6 @@ public class SecurityFilterConfig {
     private final CorsProperties corsProperties;
     private final CustomSecurityFilter customSecurityFilter;
     private final AuthenticationProvider authenticationProvider;
-    private final CustomPermissionEvaluator customPermissionEvaluator;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -48,13 +43,6 @@ public class SecurityFilterConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    @Bean
-    public MethodSecurityExpressionHandler expressionHandler() {
-        final DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-        expressionHandler.setPermissionEvaluator(customPermissionEvaluator);
-        return expressionHandler;
     }
 
     @Bean
