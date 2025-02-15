@@ -34,7 +34,7 @@ public class User extends TimestampEntity {
     @Fetch(FetchMode.SUBSELECT)
     private List<Todo> todos = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 

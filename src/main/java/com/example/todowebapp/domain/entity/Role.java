@@ -27,7 +27,7 @@ public class Role extends TimestampEntity {
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "roles_privileges",
             joinColumns = @JoinColumn(name = "role_id"),
