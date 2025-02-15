@@ -6,7 +6,7 @@ import com.example.todowebapp.domain.entity.User;
 import com.example.todowebapp.exceptions.ApiException;
 import com.example.todowebapp.exceptions.ErrorCode;
 import com.example.todowebapp.repository.UserRepository;
-import com.example.todowebapp.util.UserSecurityUtil;
+import com.example.todowebapp.security.AuthenticationUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,9 +32,8 @@ public class TodoServiceImpl implements TodoService {
      * @return  list of dto
      */
     @Override
-    public List<TodoDTO> getTodos() {
-        final User user = UserSecurityUtil.getCurrentUser();
-        return todoRepository.findAllByUserId(user.getId())
+    public List<TodoDTO> getTodos(final AuthenticationUserDetails userDetails) {
+        return todoRepository.findAllByUserId(userDetails.getUserId())
                 .stream()
                 .map(this::getTodoDTO)
                 .toList();
@@ -47,8 +46,9 @@ public class TodoServiceImpl implements TodoService {
      */
     @Override
     @Transactional
-    public TodoDTO createTodo(final TodoDTO todo) {
-        final User user = UserSecurityUtil.getCurrentUser();
+    public TodoDTO createTodo(final TodoDTO todo,
+                              final AuthenticationUserDetails userDetails) {
+        final User user = getUser(userDetails);
 
         final Todo todoToSave = Todo.builder()
                 .description(todo.getDescription())
@@ -73,7 +73,8 @@ public class TodoServiceImpl implements TodoService {
      */
     @Override
     @Transactional
-    public TodoDTO updateTodo(final TodoDTO todo) {
+    public TodoDTO updateTodo(final TodoDTO todo,
+                              final AuthenticationUserDetails userDetails) {
         if (todo.getId() == null) {
             throw new ApiException(ErrorCode.TODO_TASK_NOT_FOUND);
         }
@@ -103,12 +104,16 @@ public class TodoServiceImpl implements TodoService {
 
     /**
      * This method is used for deletion of objects
-     * @param ids of tasks
+     *
+     * @param ids                       of tasks
+     * @param userDetails               contains authenticated user info
      */
     @Override
     @Transactional
-    public void deleteTodos(final Set<Long> ids) {
-        final User user = UserSecurityUtil.getCurrentUser();
+    public void deleteTodos(final Set<Long> ids,
+                            final AuthenticationUserDetails userDetails) {
+        final User user = getUser(userDetails);
+
         final Set<Long> userTodos = user.getTodos() == null ?
                 new HashSet<>() :
                 user.getTodos()
@@ -127,5 +132,10 @@ public class TodoServiceImpl implements TodoService {
         }
 
         todoRepository.deleteAllByIdInBatch(ids);
+    }
+
+    private User getUser(final AuthenticationUserDetails userDetails) {
+        return userRepository.findById(userDetails.getUserId())
+                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
     }
 }

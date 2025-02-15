@@ -18,7 +18,7 @@ public class Todo extends TimestampEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    protected Long id;
+    private Long id;
 
     @Column(name = "description")
     private String description;
