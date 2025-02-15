@@ -29,9 +29,9 @@ public class Role extends TimestampEntity {
 
     @ManyToMany
     @JoinTable(
-            name = "roles_priviliges",
+            name = "roles_privileges",
             joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "NULL")
+            inverseJoinColumns = @JoinColumn(name = "privilege_id")
     )
     private List<Privilege> privileges = new ArrayList<>();
 
