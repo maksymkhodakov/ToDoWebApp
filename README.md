@@ -1,4 +1,4 @@
-# ToDoWebApp
+# ToDoWebApp - demo app
 
 ## System requirements
 
